@@ -18,12 +18,27 @@ const DomainSchema = new mongoose.Schema({
   },
   domainLogo: {
     type: String,
-    required: false
+    required: true
   },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  level: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  isParent: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+  parentId: {
+    type: String,
+    required: false
   }
+
 });
 autoIncrement.initialize(mongoose.connection);
 
@@ -47,8 +62,10 @@ DomainSchema.statics = {
       });
   },
 
-  list({ skip = 0, limit = 50 } = {}) {
-    return this.find()
+  list({ skip = 0, limit = 50, level = 1, parentId } = {}) {
+    const query = parentId ? { parentId: parentId } : {};
+    query.level = level;
+    return this.find(query)
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)

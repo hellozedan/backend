@@ -22,6 +22,7 @@ describe('## ServiceProvider APIs', () => {
     serviceProviderName: 'KK12344',
     serviceProviderImagesUrl: ['path'],
     serviceProviderDesc: 'desc',
+    address: 'israel',
     domainId: '1'
   };
 

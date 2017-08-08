@@ -15,12 +15,32 @@ const ServiceProviderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+    required: true
+  },
+  reviews: {
+    type: [{
+      _id: false,
+      score: Number,
+      comment: String,
+      userId: String
+    }],
+    required: false
+  },
   serviceProviderDesc: {
     type: String,
     required: false
   },
   serviceProviderImagesUrl: {
     type: [],
+    required: false
+  },
+  rating: {
+    type: [{
+      _id: false,
+      isActive: Boolean
+    }],
     required: false
   },
   createdAt: {
@@ -30,7 +50,12 @@ const ServiceProviderSchema = new mongoose.Schema({
   domainId: {
     type: String,
     required: true
-  }
+  },
+  primary: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
 
 });
 autoIncrement.initialize(mongoose.connection);
@@ -55,8 +80,13 @@ ServiceProviderSchema.statics = {
       });
   },
 
-  list({ skip = 0, limit = 50 } = {}) {
-    return this.find()
+  list({ skip = 0, limit = 50, domainId, primary } = {}) {
+    const query = domainId ? { domainId: domainId, } : {};
+    if (primary) {
+      query.primary = primary;
+    }
+
+    return this.find(query)
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)

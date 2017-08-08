@@ -34,10 +34,16 @@ function get(req, res) {
  * @returns {ServiceProvider}
  */
 function create(req, res, next) {
+  /**
+    TODO: check if domain is exist
+   */
   const serviceProvider = new ServiceProvider({
     serviceProviderName: req.body.serviceProviderName,
     serviceProviderDesc: req.body.serviceProviderDesc,
     serviceProviderImagesUrl: req.body.serviceProviderImagesUrl,
+    address: req.body.address,
+    reviews: req.body.reviews,
+    primary: req.body.primary,
     domainId: req.body.domainId
   });
 
@@ -53,10 +59,16 @@ function create(req, res, next) {
  * @returns {ServiceProvider}
  */
 function update(req, res, next) {
+  /**
+   TODO: check if domain is exist
+   */
   const serviceProvider = req.serviceProvider;
   serviceProvider.serviceProviderName = req.body.serviceProviderName;
   serviceProvider.serviceProviderDesc = req.body.serviceProviderDesc;
   serviceProvider.serviceProviderImagesUrl = req.body.serviceProviderImagesUrl;
+  serviceProvider.address = req.body.address;
+  serviceProvider.reviews = req.body.reviews;
+  serviceProvider.primary = req.body.primary;
   serviceProvider.domainId = req.body.domainId;
 
   serviceProvider.save()
@@ -71,8 +83,8 @@ function update(req, res, next) {
  * @returns {ServiceProvider[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  ServiceProvider.list({ limit, skip })
+  const { limit = 50, skip = 0, domainId, primary } = req.query;
+  ServiceProvider.list({ limit, skip, domainId, primary })
     .then(serviceProviders => res.json(serviceProviders))
     .catch(e => next(e));
 }

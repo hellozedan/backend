@@ -1,12 +1,17 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
+import autoIncrement from 'mongoose-auto-increment';
 import APIError from '../helpers/APIError';
 
 /**
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true
+  },
   username: {
     type: String,
     required: true
@@ -22,6 +27,8 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+autoIncrement.initialize(mongoose.connection);
+UserSchema.plugin(autoIncrement.plugin, { model: 'User', startAt: 1, field: 'userId' });
 /**
  * Add your
  * - pre-save hooks

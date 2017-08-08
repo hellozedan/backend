@@ -36,7 +36,9 @@ function get(req, res) {
 function create(req, res, next) {
   const domain = new Domain({
     domainName: req.body.domainName,
-    domainLogo: req.body.domainLogo
+    domainLogo: req.body.domainLogo,
+    level: req.body.level,
+    parentId: req.body.parentId
   });
 
   domain.save()
@@ -51,9 +53,15 @@ function create(req, res, next) {
  * @returns {Domain}
  */
 function update(req, res, next) {
+  /**
+   TODO: validate parameters, check if sub domain has parent domain, check if levels are correct
+   */
   const domain = req.domain;
   domain.domainName = req.body.domainName;
   domain.domainLogo = req.body.domainLogo;
+  domain.level = req.body.level;
+  domain.parentId = req.body.parentId;
+  domain.isParent = req.body.isParent;
 
   domain.save()
     .then(savedDomain => res.json(savedDomain))
@@ -67,8 +75,8 @@ function update(req, res, next) {
  * @returns {Domain[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  Domain.list({ limit, skip })
+  const { limit = 50, skip = 0, level = 1, parentId } = req.query;
+  Domain.list({ limit, skip, level, parentId })
     .then(domains => res.json(domains))
     .catch(e => next(e));
 }

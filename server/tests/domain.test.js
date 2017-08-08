@@ -20,7 +20,9 @@ after((done) => {
 describe('## Domain APIs', () => {
   let domain = {
     domainName: 'KK1233',
-    domainLogo: '1234567890'
+    domainLogo: '1234567890',
+    level: 1,
+    isParent: false
   };
 
   describe('# POST /api/domains', () => {
