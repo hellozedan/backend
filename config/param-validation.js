@@ -1,6 +1,26 @@
 import Joi from 'joi';
 
 export default {
+  // UPDATE /api/articles/:articleId
+  updateArticle: {
+    body: {
+      title: Joi.string().required(),
+      subTitle: Joi.string().required(),
+      content: Joi.string().required(),
+      _id: Joi.string().hex().required()
+    },
+    params: {
+      articleId: Joi.string().hex().required()
+    }
+  },
+ // Post /articles/api
+  createArticle: {
+    body: {
+      title: Joi.string().required(),
+      subTitle: Joi.string().required(),
+      content: Joi.string().required()
+    }
+  },
   // POST /api/users
   createUser: {
     body: {
@@ -19,6 +39,7 @@ export default {
       userId: Joi.string().hex().required()
     }
   },
+
 
   // POST /api/domains
   createDomain: {

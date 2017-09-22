@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './user.route';
+import articlesRoutes from './articles.route';
 import domainRoutes from './domain.route';
 import serviceProviderRoutes from './service-provider.route';
 import authRoutes from './auth.route';
@@ -13,6 +14,7 @@ router.get('/health-check', (req, res) =>
 
 // mount user routes at /users
 router.use('/users', userRoutes);
+router.use('/articles', articlesRoutes);
 
 // mount domain routes at /domains
 router.use('/domains', domainRoutes);
