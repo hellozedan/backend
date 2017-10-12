@@ -89,6 +89,22 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
+
+function getAllforAdmin(req, res, next) {
+  const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
+  const od = (order === 'ASC') ? 1 : -1;
+  let sortOD = {};
+  sortOD[sort] = od
+  ServiceProvider.count({})
+    .then(count =>{
+      res.set('X-Total-Count',count)
+      ServiceProvider.list({limit, start, sortOD})
+        .then(serviceProviders => res.json({'items':serviceProviders,count:count}))
+        .catch(e => next(e)
+        )})
+    .catch(e => next(e));
+}
+
 /**
  * Delete serviceProvider.
  * @returns {ServiceProvider}
@@ -100,4 +116,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove };
+export default { load, get, create, update, list , getAllforAdmin ,remove };
