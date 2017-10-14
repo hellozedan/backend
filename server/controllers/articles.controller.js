@@ -40,19 +40,15 @@ function create(req, res, next) {
  * @returns {User}
  */
 function update(req, res, next) {
-  const articlBody = req.body;
-  // if(articlBody._id) {
-  //   Article.findOne({_id:articlBody._id})
-  //     .then((article) => {
-  req.article.content = articlBody.content;
-  req.article.title = articlBody.title;
-  req.article.subTitle = articlBody.subTitle;
-  req.article.lastUpdated = new Date();
-  req.article.save()
+  const article = req.article;
+
+  article.content = req.body.content;
+  article.title = req.body.title;
+  article.subTitle = req.body.subTitle;
+  article.lastUpdated = new Date();
+  article.save()
     .then(savedArticle => res.json(savedArticle))
     .catch(e => next(e));
-  // })
-  // .catch(e => next(e));
 }
 
 /**
@@ -62,19 +58,18 @@ function update(req, res, next) {
  * @returns {User[]}
  */
 function list(req, res, next) {
-  const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
+  const { start = '0', limit = '20', sort = '_id', order = 'ASC' } = req.query;
   const od = (order === 'ASC') ? 1 : -1;
-  let sortOD = {};
-  sortOD[sort] = od
+  const sortOD = {};
+  sortOD[sort] = od;
   Article.count({})
-    .then(count =>{
-    res.set('X-Total-Count',count)
-    Article.list({limit, start, sortOD})
-      .then(articles => res.json({'items':articles,count:count}))
-      .catch(e => next(e)
-    )})
+    .then((count) => {
+      res.set('X-Total-Count', count);
+      Article.list({ limit, start, sortOD })
+        .then(articles => res.json({ articles, count }))
+        .catch(e => next(e));
+    })
     .catch(e => next(e));
-
 }
 
 /**
@@ -88,4 +83,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default {load, get, create, update, list, remove};
+export default { load, get, create, update, list, remove };

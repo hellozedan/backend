@@ -63,7 +63,7 @@ DomainSchema.statics = {
   },
 
   list({ skip = 0, limit = 50, level = 1, parentId } = {}) {
-    const query = parentId ? { parentId: parentId } : {};
+    const query = parentId ? { parentId } : {};
     query.level = level;
     return this.find(query)
       .sort({ createdAt: -1 })

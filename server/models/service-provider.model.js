@@ -81,7 +81,7 @@ ServiceProviderSchema.statics = {
   },
 
   list({ skip = 0, limit = 50, domainId, primary } = {}) {
-    const query = domainId ? { domainId: domainId, } : {};
+    const query = domainId ? { domainId } : {};
     if (primary) {
       query.primary = primary;
     }

@@ -75,11 +75,12 @@ ArticleSchema.statics = {
 
   /**
    * List users in descending order of 'createdAt' timestamp.
-   * @param {number} skip - Number of users to be skipped.
+   * @param {number} start - Number of users to be skipped.
+   * @param {number} sortOD - Number of users to be skipped.
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
    */
-  list({ start = 0, limit = 50,sortOD={createdAt: -1 } } = {}) {
+  list({ start = 0, limit = 50, sortOD = { createdAt: -1 } } = {}) {
     return this.find()
       .sort(+sortOD)
       .skip(+start)
