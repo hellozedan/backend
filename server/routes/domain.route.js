@@ -12,6 +12,10 @@ router.route('/')
   /** POST /api/domains - Create new domain */
   .post(validate(paramValidation.createDomain), domainCtrl.create);
 
+router.route('/getAllforAdmin')
+/** GET /api/domains/getAllforAdmin - Get list of domains */
+  .get(domainCtrl.getAllforAdmin);
+
 router.route('/:domainId')
   /** GET /api/domains/:domainId - Get domain */
   .get(domainCtrl.get)

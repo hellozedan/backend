@@ -12,6 +12,9 @@ router.route('/')
   /** POST /api/serviceProviders - Create new serviceProvider */
   .post(validate(paramValidation.createServiceProvider), serviceProviderCtrl.create);
 
+router.route('/getAllforAdmin')
+/** GET /api/serviceProviders/getAllforAdmin - Get list of serviceProvider */
+  .get(serviceProviderCtrl.getAllforAdmin);
 router.route('/:serviceProviderId')
   /** GET /api/serviceProviders/:serviceProviderId - Get serviceProvider */
   .get(serviceProviderCtrl.get)

@@ -82,6 +82,28 @@ function list(req, res, next) {
 }
 
 /**
+ * GetAll for admin client domain list.
+ * @property {number} req.query.skip - Number of domains to be skipped.
+ * @property {number} req.query.limit - Limit number of domains to be returned.
+ * @returns {Domain[]}
+ */
+function getAllforAdmin(req, res, next) {
+  const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
+  const od = (order === 'ASC') ? 1 : -1;
+  let sortOD = {};
+  sortOD[sort] = od
+  Domain.count({})
+    .then(count =>{
+      res.set('X-Total-Count',count)
+      Domain.list({limit, start, sortOD})
+        .then(domains => res.json({'items':domains,count:count}))
+        .catch(e => next(e)
+        )})
+    .catch(e => next(e));
+}
+
+
+/**
  * Delete domain.
  * @returns {Domain}
  */
@@ -92,4 +114,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove };
+export default { load, get, create, update, list, remove,getAllforAdmin };
