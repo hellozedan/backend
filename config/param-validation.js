@@ -6,8 +6,7 @@ export default {
     body: {
       title: Joi.string().required(),
       subTitle: Joi.string().required(),
-      content: Joi.string().required(),
-      _id: Joi.string().hex().required()
+      content: Joi.string().required()
     },
     params: {
       articleId: Joi.string().hex().required()
@@ -57,6 +56,25 @@ export default {
     },
     params: {
       domainId: Joi.string().hex().required()
+    }
+  },
+
+  // POST /api/tasks
+  createTask: {
+    body: {
+      categoryName: Joi.string(),
+      taskName: Joi.string().required(),
+    }
+  },
+
+  // UPDATE /api/domains/:taskId
+  updateTask: {
+    body: {
+      categoryName: Joi.string(),
+      taskName: Joi.string().required(),
+    },
+    params: {
+      taskId: Joi.string().hex().required()
     }
   },
 

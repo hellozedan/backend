@@ -2,6 +2,7 @@ import express from 'express';
 import userRoutes from './user.route';
 import articlesRoutes from './articles.route';
 import domainRoutes from './domain.route';
+import taskRoutes from './task.route';
 import serviceProviderRoutes from './service-provider.route';
 import authRoutes from './auth.route';
 
@@ -18,6 +19,9 @@ router.use('/articles', articlesRoutes);
 
 // mount domain routes at /domains
 router.use('/domains', domainRoutes);
+
+// mount domain tasks at /tasks
+router.use('/tasks', taskRoutes);
 
 // mount domain routes at /serviceProviders
 router.use('/serviceProviders', serviceProviderRoutes);

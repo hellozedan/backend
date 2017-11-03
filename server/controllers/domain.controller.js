@@ -88,18 +88,17 @@ function list(req, res, next) {
  * @returns {Domain[]}
  */
 function getAllforAdmin(req, res, next) {
-  const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
+  const { start = '0', limit = '20', sort = '_id', order = 'ASC' } = req.query;
   const od = (order === 'ASC') ? 1 : -1;
-  let sortOD = {};
-  sortOD[sort] = od
+  const sortOD = {};
+  sortOD[sort] = od;
   Domain.count({})
-    .then(count =>{
-      res.set('X-Total-Count',count)
-      Domain.list({limit, start, sortOD})
-        .then(domains => res.json({'items':domains,count:count}))
-        .catch(e => next(e)
-        )})
-    .catch(e => next(e));
+    .then((count) => {
+      res.set('X-Total-Count', count);
+      Domain.list({ limit, start, sortOD })
+        .then(domains => res.json({ domains, count }))
+        .catch(e => next(e));
+    }).catch(e => next(e));
 }
 
 
@@ -114,4 +113,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove,getAllforAdmin };
+export default { load, get, create, update, list, remove, getAllforAdmin };

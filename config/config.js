@@ -10,7 +10,7 @@ const envVarsSchema = Joi.object({
     .default('development'),
   PORT: Joi.number()
     .default(4040),
-  MONGOOSE_DEBUG: Joi.boolean()  
+  MONGOOSE_DEBUG: Joi.boolean()
     .when('NODE_ENV', {
       is: Joi.string().equal('development'),
       then: Joi.boolean().default(true),
