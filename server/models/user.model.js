@@ -124,8 +124,7 @@ UserSchema.statics = {
           newUser.save()
             .then(savedUser => cb(null, savedUser))
             .catch(e => cb(e));
-
-        }else{
+        } else {
           return cb(null, user);
         }
       });

@@ -39,7 +39,7 @@ function sendToken(req, res) {
 
 
 function generateToken(req, res, next) {
-  req.token = createToken(req.auth);
+  req.token = createToken(req.auth); // eslint-disable-line no-param-reassign
   next();
 }
 
@@ -50,14 +50,13 @@ function generateToken(req, res, next) {
  * @returns {User}
  */
 function create(req, res, next) {
-
   if (!req.user) {
     const err = new APIError('User Not Authenticated', httpStatus.UNAUTHORIZED, true);
     return next(err);
   }
 
-  req.auth = { id: req.user.id };
-  next();
+  req.auth = { id: req.user.id }; // eslint-disable-line no-param-reassign
+  return next();
 }
 
 /**
