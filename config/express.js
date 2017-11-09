@@ -1,4 +1,6 @@
 import express from 'express';
+import passport from 'passport';
+import FacebookTokenStrategy from 'passport-facebook-token';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -13,6 +15,7 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './config';
 import APIError from '../server/helpers/APIError';
+import User from '../server/models/user.model';
 
 const app = express();
 
@@ -22,6 +25,18 @@ if (config.env === 'development') {
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
+
+const FACEBOOK_APP_ID = '176069329639961';
+const FACEBOOK_APP_SECRET = 'e5c778e52c471fb8a50fb930a30f492f';
+
+passport.use(new FacebookTokenStrategy(
+  { clientID: FACEBOOK_APP_ID, clientSecret: FACEBOOK_APP_SECRET },
+  function (accessToken, refreshToken, profile, done) {
+    User.upsertFbUser(accessToken, refreshToken, profile, function (err, user) {
+      return done(err, user);
+    });
+  }));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());

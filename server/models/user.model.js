@@ -8,22 +8,51 @@ import APIError from '../helpers/APIError';
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
+  fbAccessToken: {
+    type: String
+  },
+  fbUserId: {
+    type: String
+  },
+  fbId: {
+    type: String
+  },
+  name: {
+    type: String
+  },
+  gender: {
+    type: String
+  },
+  picture: {
+
+  },
   userId: {
-    type: String,
-    required: true
+    type: String
   },
   username: {
     type: String,
-    required: true
+
   },
   mobileNumber: {
     type: String,
-    required: true,
     match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
   },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true
+  },
+  facebookProvider: {
+    type: {
+      id: String,
+      token: String
+    },
+    select: false
   }
 });
 
@@ -75,6 +104,31 @@ UserSchema.statics = {
       .skip(+skip)
       .limit(+limit)
       .exec();
+  },
+
+  upsertFbUser(accessToken, refreshToken, profile, cb) {
+    const That = this;
+
+    return this.findOne({ 'facebookProvider.id': profile.id })
+      .exec()
+      .then((user) => {
+        if (!user) {
+          const newUser = new That({
+            email: profile.emails[0].value,
+            facebookProvider: {
+              id: profile.id,
+              token: accessToken
+            }
+          });
+
+          newUser.save()
+            .then(savedUser => cb(null, savedUser))
+            .catch(e => cb(e));
+
+        }else{
+          return cb(null, user);
+        }
+      });
   }
 };
 

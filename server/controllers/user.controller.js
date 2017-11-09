@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+import httpStatus from 'http-status';
+import APIError from '../helpers/APIError';
 import User from '../models/user.model';
 
 /**
@@ -20,6 +23,26 @@ function get(req, res) {
   return res.json(req.user);
 }
 
+
+function createToken(auth) {
+  return jwt.sign(
+    { id: auth.id },
+    'my-secret',
+    { expiresIn: 60 * 120 }
+  );
+}
+
+function sendToken(req, res) {
+  res.setHeader('x-auth-token', req.token);
+  res.status(200).send(req.auth);
+}
+
+
+function generateToken(req, res, next) {
+  req.token = createToken(req.auth);
+  next();
+}
+
 /**
  * Create new user
  * @property {string} req.body.username - The username of user.
@@ -27,14 +50,14 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-  const user = new User({
-    username: req.body.username,
-    mobileNumber: req.body.mobileNumber
-  });
 
-  user.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+  if (!req.user) {
+    const err = new APIError('User Not Authenticated', httpStatus.UNAUTHORIZED, true);
+    return next(err);
+  }
+
+  req.auth = { id: req.user.id };
+  next();
 }
 
 /**
@@ -77,4 +100,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove };
+export default { load, get, create, update, list, remove, generateToken, sendToken };
