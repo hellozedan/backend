@@ -8,7 +8,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
   /** GET /api/domains - Get list of domains */
-  .get( domainCtrl.list)
+  .get(config.authenticate, domainCtrl.list)
 
   /** POST /api/domains - Create new domain */
   .post(validate(paramValidation.createDomain), domainCtrl.create);

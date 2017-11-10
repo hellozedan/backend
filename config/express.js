@@ -28,6 +28,12 @@ app.use(bodyParser.json());
 
 const FACEBOOK_APP_ID = '176069329639961';
 const FACEBOOK_APP_SECRET = 'e5c778e52c471fb8a50fb930a30f492f';
+const corsOption = {
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
 
 passport.use(new FacebookTokenStrategy(
   { clientID: FACEBOOK_APP_ID, clientSecret: FACEBOOK_APP_SECRET },
@@ -47,7 +53,7 @@ app.use(methodOverride());
 app.use(helmet());
 
 // enable CORS - Cross Origin Resource Sharing
-app.use(cors());
+app.use(cors(corsOption));
 
 // enable detailed API logging in dev env
 if (config.env === 'development') {
