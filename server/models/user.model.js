@@ -8,38 +8,31 @@ import APIError from '../helpers/APIError';
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
-  fbAccessToken: {
+  userId: {
     type: String
   },
-  fbUserId: {
+  token: {
     type: String
   },
-  fbId: {
+  displayName: {
     type: String
   },
   name: {
-    type: String
+    familyName: {
+      type: String
+    },
+    givenName: {
+      type: String
+    },
+    middleName: {
+      type: String
+    }
   },
   gender: {
     type: String
   },
-  picture: {
-
-  },
-  userId: {
+  photo: {
     type: String
-  },
-  username: {
-    type: String,
-
-  },
-  mobileNumber: {
-    type: String,
-    match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   },
   email: {
     type: String,
@@ -47,12 +40,20 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     unique: true
   },
+  mobileNumber: {
+    type: String,
+    match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
+  },
   facebookProvider: {
     type: {
       id: String,
       token: String
     },
     select: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
@@ -106,9 +107,8 @@ UserSchema.statics = {
       .exec();
   },
 
-  upsertFbUser(accessToken, refreshToken, profile, cb) {
+  upsertFbUser(accessToken, refreshToken, profile) {
     const That = this;
-
     return this.findOne({ 'facebookProvider.id': profile.id })
       .exec()
       .then((user) => {
@@ -118,15 +118,24 @@ UserSchema.statics = {
             facebookProvider: {
               id: profile.id,
               token: accessToken
-            }
+            },
+            displayName: profile.displayName,
+            name: profile.name,
+            photo: profile.photos[0].value,
+            gender: profile.gender
           });
 
-          newUser.save()
-            .then(savedUser => cb(null, savedUser))
-            .catch(e => cb(e));
-        } else {
-          return cb(null, user);
+          return newUser.save()
+            .then((savedUser) => {
+              if (savedUser) {
+                return savedUser;
+              }
+              const err = new APIError('cannot save user!', httpStatus.NOT_FOUND);
+              return Promise.reject(err);
+            });
         }
+
+        return user;
       });
   }
 };

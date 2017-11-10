@@ -31,10 +31,10 @@ const FACEBOOK_APP_SECRET = 'e5c778e52c471fb8a50fb930a30f492f';
 
 passport.use(new FacebookTokenStrategy(
   { clientID: FACEBOOK_APP_ID, clientSecret: FACEBOOK_APP_SECRET },
-  function (accessToken, refreshToken, profile, done) {
-    User.upsertFbUser(accessToken, refreshToken, profile, function (err, user) {
-      return done(err, user);
-    });
+  (accessToken, refreshToken, profile, done) => {
+    User.upsertFbUser(accessToken, refreshToken, profile)
+      .then(user => done(null, user))
+      .catch(e => done(e));
   }));
 
 app.use(bodyParser.urlencoded({ extended: true }));

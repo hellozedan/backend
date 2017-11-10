@@ -2,12 +2,13 @@ import express from 'express';
 import validate from 'express-validation';
 import paramValidation from '../../config/param-validation';
 import domainCtrl from '../controllers/domain.controller';
+import config from '../../config/config';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
   /** GET /api/domains - Get list of domains */
-  .get(domainCtrl.list)
+  .get( domainCtrl.list)
 
   /** POST /api/domains - Create new domain */
   .post(validate(paramValidation.createDomain), domainCtrl.create);

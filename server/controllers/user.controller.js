@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import User from '../models/user.model';
-
+import config from '../../config/config';
 /**
  * Load user and append to req.
  */
@@ -27,7 +27,7 @@ function get(req, res) {
 function createToken(auth) {
   return jwt.sign(
     { id: auth.id },
-    'my-secret',
+    config.jwtSecret,
     { expiresIn: 60 * 120 }
   );
 }

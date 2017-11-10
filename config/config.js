@@ -1,5 +1,5 @@
 import Joi from 'joi';
-
+import expressJwt from 'express-jwt';
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
 require('dotenv').config();
 
@@ -38,7 +38,17 @@ const config = {
   mongo: {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT
-  }
+  },
+  authenticate: expressJwt({
+    secret: envVars.JWT_SECRET,
+    requestProperty: 'auth',
+    getToken: (req) => {
+      if (req.headers['x-auth-token']) {
+        return req.headers['x-auth-token'];
+      }
+      return null;
+    }
+  })
 };
 
 export default config;
