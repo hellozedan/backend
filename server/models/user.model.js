@@ -3,34 +3,26 @@ import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import autoIncrement from 'mongoose-auto-increment';
 import APIError from '../helpers/APIError';
-
+import taskList from '../data/tasks.data';
 /**
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
   userId: {
-    type: String
+    type: String,
+    unique: true,
+    required: true
   },
   token: {
     type: String
   },
-  displayName: {
-    type: String
-  },
+  displayName: String,
   name: {
-    familyName: {
-      type: String
-    },
-    givenName: {
-      type: String
-    },
-    middleName: {
-      type: String
-    }
+    familyName: String,
+    givenName: String,
+    middleName: String
   },
-  gender: {
-    type: String
-  },
+  gender: String,
   photo: {
     type: String
   },
@@ -40,6 +32,18 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     unique: true
   },
+  tasks: [{
+    _id: false,
+    categoryName: String,
+    order: Number,
+    tasks: [{
+      _id: false,
+      taskName: String,
+      selected: Boolean,
+      order: Number
+    }]
+
+  }],
   mobileNumber: {
     type: String,
     match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
@@ -122,7 +126,8 @@ UserSchema.statics = {
             displayName: profile.displayName,
             name: profile.name,
             photo: profile.photos[0].value,
-            gender: profile.gender
+            gender: profile.gender,
+            tasks: taskList
           });
 
           return newUser.save()

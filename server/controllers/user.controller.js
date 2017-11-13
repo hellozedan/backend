@@ -3,17 +3,30 @@ import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import User from '../models/user.model';
 import config from '../../config/config';
-/**
- * Load user and append to req.
- */
-function load(req, res, next, id) {
-  User.get(id)
+
+function getCurrentUser(req, res, next) {
+  User.get(req.auth.id)
     .then((user) => {
       req.user = user; // eslint-disable-line no-param-reassign
       return next();
     })
     .catch(e => next(e));
 }
+
+function getOne(req, res) {
+  const user = req.user.toObject();
+  delete user.facebookProvider;
+  delete user._id;
+  delete user.__v;
+
+  res.json(user);
+}
+
+function getTasks(req, res) {
+  const user = req.user.toObject();
+  res.json(user.tasks);
+}
+
 
 /**
  * Get user
@@ -34,7 +47,7 @@ function createToken(auth) {
 
 function sendToken(req, res) {
   res.setHeader('x-auth-token', req.token);
-  res.status(200).send(req.auth);
+  res.status(200).send();
 }
 
 
@@ -99,4 +112,15 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, remove, generateToken, sendToken };
+export default {
+  get,
+  create,
+  update,
+  list,
+  remove,
+  generateToken,
+  sendToken,
+  getCurrentUser,
+  getOne,
+  getTasks
+};
