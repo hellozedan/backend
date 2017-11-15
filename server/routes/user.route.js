@@ -6,12 +6,11 @@ import config from '../../config/config';
 const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/auth/facebook')
- /** POST /api/users - Create new user */
   .post(passport.authenticate('facebook-token', { session: false }), userCtrl.create, userCtrl.generateToken, userCtrl.sendToken);
 
 router.route('/tasks')
-/** GET /api/users/tasks - Get user tasks */
-  .get(config.authenticate, userCtrl.getCurrentUser, userCtrl.getTasks);
+  .get(config.authenticate, userCtrl.getCurrentUser, userCtrl.getTasks)
+  .put(config.authenticate, userCtrl.getCurrentUser, userCtrl.update, userCtrl.getTasks);
 
 router.route('/auth/me')
   .get(config.authenticate, userCtrl.getCurrentUser, userCtrl.getOne);

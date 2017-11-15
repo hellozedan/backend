@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import User from '../models/user.model';
 import config from '../../config/config';
+import taskData from '../data/tasks.data';
 
 function getCurrentUser(req, res, next) {
   User.get(req.auth.id)
@@ -24,7 +25,7 @@ function getOne(req, res) {
 
 function getTasks(req, res) {
   const user = req.user.toObject();
-  res.json(user.tasks);
+  res.json({ tasks: user.tasks, tasksCategories: taskData.tasksCategories });
 }
 
 
@@ -41,7 +42,7 @@ function createToken(auth) {
   return jwt.sign(
     { id: auth.id },
     config.jwtSecret,
-    { expiresIn: 60 * 120 }
+    { expiresIn: 60 * 12000 } //seconds
   );
 }
 
@@ -80,11 +81,10 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = req.user;
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
+  user.tasks = req.body.tasks ? req.body.tasks: user.tasks;
 
   user.save()
-    .then(savedUser => res.json(savedUser))
+    .then(savedUser => next())
     .catch(e => next(e));
 }
 

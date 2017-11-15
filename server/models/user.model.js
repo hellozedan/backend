@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import autoIncrement from 'mongoose-auto-increment';
 import APIError from '../helpers/APIError';
-import taskList from '../data/tasks.data';
+import taskData from '../data/tasks.data';
 /**
  * User Schema
  */
@@ -127,7 +127,7 @@ UserSchema.statics = {
             name: profile.name,
             photo: profile.photos[0].value,
             gender: profile.gender,
-            tasks: taskList
+            tasks: taskData.taskList
           });
 
           return newUser.save()
