@@ -63,13 +63,12 @@ function update(req, res, next) {
    TODO: check if domain is exist
    */
   const serviceProvider = req.serviceProvider;
-  serviceProvider.serviceProviderName = req.body.serviceProviderName;
-  serviceProvider.serviceProviderDesc = req.body.serviceProviderDesc;
-  serviceProvider.serviceProviderImagesUrl = req.body.serviceProviderImagesUrl;
-  serviceProvider.address = req.body.address;
-  serviceProvider.reviews = req.body.reviews;
-  serviceProvider.primary = req.body.primary;
-  serviceProvider.domainId = req.body.domainId;
+  const details = req.body;
+  delete details.serviceProviderId;
+  delete details.domainId;
+
+  Object.assign(serviceProvider, req.body);
+
 
   serviceProvider.save()
     .then(savedServiceProvider => res.json(savedServiceProvider))

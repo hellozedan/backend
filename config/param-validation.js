@@ -72,7 +72,7 @@ export default {
   updateServiceProvider: {
     body: {
       serviceProviderName: Joi.string().required(),
-      serviceProviderDesc: Joi.string().required(),
+      address: Joi.string().required(),
       serviceProviderImagesUrl: Joi.array().required(),
       domainId: Joi.string().required(),
     },

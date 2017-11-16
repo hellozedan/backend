@@ -2,6 +2,7 @@ import express from 'express';
 import validate from 'express-validation';
 import paramValidation from '../../config/param-validation';
 import serviceProviderCtrl from '../controllers/service-provider.controller';
+import config from '../../config/config';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -20,7 +21,7 @@ router.route('/:serviceProviderId')
   .get(serviceProviderCtrl.get)
 
   /** PUT /api/serviceProviders/:serviceProviderId - Update serviceProvider */
-  .put(validate(paramValidation.updateServiceProvider), serviceProviderCtrl.update)
+  .put(validate(paramValidation.updateServiceProvider), config.authenticate, serviceProviderCtrl.update)
 
   /** DELETE /api/serviceProviders/:serviceProviderId - Delete serviceProvider */
   .delete(serviceProviderCtrl.remove);

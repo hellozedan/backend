@@ -24,7 +24,11 @@ const ServiceProviderSchema = new mongoose.Schema({
       _id: false,
       score: Number,
       comment: String,
-      userId: String
+      user:{
+        userId: String,
+        displayName: String,
+        photo: String
+      }
     }],
     required: false
   },
@@ -34,13 +38,6 @@ const ServiceProviderSchema = new mongoose.Schema({
   },
   serviceProviderImagesUrl: {
     type: [],
-    required: false
-  },
-  rating: {
-    type: [{
-      _id: false,
-      isActive: Boolean
-    }],
     required: false
   },
   createdAt: {
@@ -56,6 +53,10 @@ const ServiceProviderSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
+  defaultReview: {
+    type: String,
+    default: ''
+  }
 
 });
 autoIncrement.initialize(mongoose.connection);
