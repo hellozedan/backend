@@ -90,14 +90,27 @@ ServiceProviderSchema.statics = {
       });
   },
 
-  list({skip = 0, limit = 50, domainId, primary} = {}) {
+  list: function ({skip = 0, limit = 50, domainId, primary, filter} = {}) {
     const query = domainId ? {domainId} : {};
+    let SortBy = {createdAt: -1};
     if (primary) {
       query.primary = primary;
     }
+    if (filter) {
+      filter = JSON.parse(filter);
+    }
+    if (filter && filter.area) {
+      query.area = filter.area;
+    }
+    if (filter && filter.toOrderBy) {
+      SortBy = {ratingScore: -1};
+    }
+    if (filter && filter.SPName) {
+      query.serviceProviderName = {'$regex': filter.SPName, '$options': 'i'};
+    }
 
     return this.find(query)
-      .sort({createdAt: -1})
+      .sort(SortBy)
       .skip(+skip)
       .limit(+limit)
       .exec();

@@ -100,8 +100,8 @@ function update(req, res, next) {
  * @returns {ServiceProvider[]}
  */
 function list(req, res, next) {
-  const {limit = 50, skip = 0, domainId, primary} = req.query;
-  ServiceProvider.list({limit, skip, domainId, primary})
+  const { limit = 50, skip = 0, domainId, primary, filter} = req.query;
+  ServiceProvider.list({limit, skip, domainId, primary,filter})
     .then(serviceProviders => res.json(serviceProviders))
     .catch(e => next(e));
 }
