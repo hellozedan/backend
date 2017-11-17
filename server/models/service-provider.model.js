@@ -38,6 +38,10 @@ const ServiceProviderSchema = new mongoose.Schema({
     }],
     required: false
   },
+  ratingScore: {
+    type: Number,
+    default: 0
+  },
   serviceProviderDesc: {
     type: String,
     required: false
