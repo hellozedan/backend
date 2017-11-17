@@ -1,12 +1,13 @@
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import ServiceProvider from '../models/service-provider.model';
+import areas from '../data/areas.data';
 
 /**
  * Load service provider and append to req.
  */
 function load(req, res, next, id) {
-  ServiceProvider.findOne({ serviceProviderId: id })
+  ServiceProvider.findOne({serviceProviderId: id})
     .then((serviceProvider) => {
       if (!serviceProvider) {
         const err = new APIError('Not Found', httpStatus.NOT_FOUND, true);
@@ -27,6 +28,10 @@ function get(req, res) {
   return res.json(req.serviceProvider);
 }
 
+function getAreasList(req, res) {
+  return res.json(areas);
+}
+
 /**
  * Create new service provider
  * @property {string} req.body.serviceProviderName - The service provider name of ServiceProvider.
@@ -35,7 +40,7 @@ function get(req, res) {
  */
 function create(req, res, next) {
   /**
-    TODO: check if domain is exist
+   TODO: check if domain is exist
    */
   const serviceProvider = new ServiceProvider({
     serviceProviderName: req.body.serviceProviderName,
@@ -95,23 +100,23 @@ function update(req, res, next) {
  * @returns {ServiceProvider[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0, domainId, primary } = req.query;
-  ServiceProvider.list({ limit, skip, domainId, primary })
+  const { limit = 50, skip = 0, domainId, primary, filter} = req.query;
+  ServiceProvider.list({limit, skip, domainId, primary,filter})
     .then(serviceProviders => res.json(serviceProviders))
     .catch(e => next(e));
 }
 
 
 function getAllforAdmin(req, res, next) {
-  const { start = '0', limit = '20', sort = '_id', order = 'ASC' } = req.query;
+  const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
   const od = (order === 'ASC') ? 1 : -1;
   const sortOD = {};
   sortOD[sort] = od;
   ServiceProvider.count({})
     .then((count) => {
       res.set('X-Total-Count', count);
-      ServiceProvider.list({ limit, start, sortOD })
-        .then(serviceProviders => res.json({ serviceProviders, count }))
+      ServiceProvider.list({limit, start, sortOD})
+        .then(serviceProviders => res.json({serviceProviders, count}))
         .catch(e => next(e));
     }).catch(e => next(e));
 }
@@ -127,4 +132,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default { load, get, create, update, list, getAllforAdmin, remove };
+export default {load, get, create, update, list, getAllforAdmin, remove, getAreasList };

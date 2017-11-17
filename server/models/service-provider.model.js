@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import autoIncrement from 'mongoose-auto-increment';
 import APIError from '../helpers/APIError';
+import areas from '../data/areas.data';
 
 
 const ServiceProviderSchema = new mongoose.Schema({
@@ -19,12 +20,17 @@ const ServiceProviderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  area: {
+    type: String,
+    enum: areas,
+    required: true
+  },
   reviews: {
     type: [{
       _id: false,
       score: Number,
       comment: String,
-      user:{
+      user: {
         userId: String,
         displayName: String,
         photo: String
@@ -65,10 +71,9 @@ const ServiceProviderSchema = new mongoose.Schema({
 });
 autoIncrement.initialize(mongoose.connection);
 
-ServiceProviderSchema.plugin(autoIncrement.plugin, { model: 'ServiceProvider', startAt: 1, field: 'serviceProviderId' });
+ServiceProviderSchema.plugin(autoIncrement.plugin, {model: 'ServiceProvider', startAt: 1, field: 'serviceProviderId'});
 
-ServiceProviderSchema.method({
-});
+ServiceProviderSchema.method({});
 
 
 ServiceProviderSchema.statics = {
@@ -85,14 +90,27 @@ ServiceProviderSchema.statics = {
       });
   },
 
-  list({ skip = 0, limit = 50, domainId, primary } = {}) {
-    const query = domainId ? { domainId } : {};
+  list: function ({skip = 0, limit = 50, domainId, primary, filter} = {}) {
+    const query = domainId ? {domainId} : {};
+    let SortBy = {createdAt: -1};
     if (primary) {
       query.primary = primary;
     }
+    if (filter) {
+      filter = JSON.parse(filter);
+    }
+    if (filter && filter.area) {
+      query.area = filter.area;
+    }
+    if (filter && filter.toOrderBy) {
+      SortBy = {ratingScore: -1};
+    }
+    if (filter && filter.SPName) {
+      query.serviceProviderName = {'$regex': filter.SPName, '$options': 'i'};
+    }
 
     return this.find(query)
-      .sort({ createdAt: -1 })
+      .sort(SortBy)
       .skip(+skip)
       .limit(+limit)
       .exec();

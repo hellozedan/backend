@@ -7,7 +7,7 @@ import config from '../../config/config';
 const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
-  /** GET /api/serviceProviders - Get list of serviceProviders */
+/** GET /api/serviceProviders - Get list of serviceProviders */
   .get(serviceProviderCtrl.list)
 
   /** POST /api/serviceProviders - Create new serviceProvider */
@@ -16,8 +16,11 @@ router.route('/')
 router.route('/getAllforAdmin')
 /** GET /api/serviceProviders/getAllforAdmin - Get list of serviceProvider */
   .get(serviceProviderCtrl.getAllforAdmin);
+router.route('/getAreasList')
+  /* /api/serviceProviders/getAreasList   */
+  .get(serviceProviderCtrl.getAreasList);
 router.route('/:serviceProviderId')
-  /** GET /api/serviceProviders/:serviceProviderId - Get serviceProvider */
+/** GET /api/serviceProviders/:serviceProviderId - Get serviceProvider */
   .get(serviceProviderCtrl.get)
 
   /** PUT /api/serviceProviders/:serviceProviderId - Update serviceProvider */
