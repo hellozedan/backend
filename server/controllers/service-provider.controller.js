@@ -68,7 +68,7 @@ function update(req, res, next) {
   delete details.domainId;
 
 
-  Object.assign(serviceProvider, req.body);
+  Object.assign(serviceProvider, details);
 
   let average = 0;
   let count = 0;

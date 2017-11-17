@@ -81,11 +81,15 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = req.user;
-  user.tasks = req.body.tasks ? req.body.tasks: user.tasks;
+  const details = req.body;
+  delete details.userId;
 
+  Object.assign(user, details);
   user.save()
     .then(savedUser => next())
-    .catch(e => next(e));
+    .catch(e => {
+      next(e);
+    });
 }
 
 /**

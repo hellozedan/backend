@@ -44,6 +44,10 @@ const UserSchema = new mongoose.Schema({
     }]
 
   }],
+  favoritesServiceProviders: [{
+    _id: false,
+    serviceProviderId: String
+  }],
   mobileNumber: {
     type: String,
     match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']

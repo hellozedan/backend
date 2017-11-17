@@ -13,14 +13,15 @@ router.route('/tasks')
   .put(config.authenticate, userCtrl.getCurrentUser, userCtrl.update, userCtrl.getTasks);
 
 router.route('/auth/me')
-  .get(config.authenticate, userCtrl.getCurrentUser, userCtrl.getOne);
+  .get(config.authenticate, userCtrl.getCurrentUser, userCtrl.getOne)
+  .put(config.authenticate, userCtrl.getCurrentUser, userCtrl.update, userCtrl.getOne);
 
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
   .get(config.authenticate, userCtrl.getCurrentUser)
 
   /** PUT /api/users/:userId - Update user */
-  .put(userCtrl.update)
+  .put(config.authenticate, userCtrl.update)
 
   /** DELETE /api/users/:userId - Delete user */
   .delete(userCtrl.remove);
