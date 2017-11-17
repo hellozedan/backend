@@ -67,8 +67,21 @@ function update(req, res, next) {
   delete details.serviceProviderId;
   delete details.domainId;
 
+
   Object.assign(serviceProvider, req.body);
 
+  let average = 0;
+  let count = 0;
+  let score = 0;
+  if(serviceProvider.reviews.length > 0){
+    count = serviceProvider.reviews.length;
+    serviceProvider.reviews.forEach((item) => {
+      score += item.score;
+    });
+    average = score/count;
+  }
+
+  serviceProvider.ratingScore = average;
 
   serviceProvider.save()
     .then(savedServiceProvider => res.json(savedServiceProvider))
