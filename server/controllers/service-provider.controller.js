@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 import ServiceProvider from '../models/service-provider.model';
+import UserController from '../controllers/user.controller';
 import areas from '../data/areas.data';
 
 /**
@@ -100,12 +101,20 @@ function update(req, res, next) {
  * @returns {ServiceProvider[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0, domainId, primary, filter} = req.query;
-  ServiceProvider.list({limit, skip, domainId, primary,filter})
+  const { limit = 50, skip = 0, domainId, primary, filter, byFavorite = false } = req.query;
+  const favoritesServiceProviders = req.user && req.user.favoritesServiceProviders ? req.user.favoritesServiceProviders: [];
+  ServiceProvider.list({limit, skip, domainId, primary,filter, byFavorite, favoritesServiceProviders})
     .then(serviceProviders => res.json(serviceProviders))
     .catch(e => next(e));
 }
 
+function getCurrentUserWhenItNeed(req, res, next) {
+  const { byFavorite = false } = req.query;
+  if(byFavorite){
+    return UserController.getCurrentUser(req, res, next);
+  }
+  return next();
+}
 
 function getAllforAdmin(req, res, next) {
   const {start = '0', limit = '20', sort = '_id', order = 'ASC'} = req.query;
@@ -132,4 +141,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-export default {load, get, create, update, list, getAllforAdmin, remove, getAreasList };
+export default {load, get, create, update, list, getAllforAdmin, remove, getAreasList, getCurrentUserWhenItNeed };

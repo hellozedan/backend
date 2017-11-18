@@ -90,7 +90,7 @@ ServiceProviderSchema.statics = {
       });
   },
 
-  list: function ({skip = 0, limit = 50, domainId, primary, filter} = {}) {
+  list: function ({ skip = 0, limit = 50, domainId, primary, filter, byFavorite, favoritesServiceProviders } = {}) {
     const query = domainId ? {domainId} : {};
     let SortBy = {createdAt: -1};
     if (primary) {
@@ -107,6 +107,9 @@ ServiceProviderSchema.statics = {
     }
     if (filter && filter.SPName) {
       query.serviceProviderName = {'$regex': filter.SPName, '$options': 'i'};
+    }
+    if(byFavorite && favoritesServiceProviders.length > 0){
+      query.serviceProviderId = { $in: favoritesServiceProviders };
     }
 
     return this.find(query)

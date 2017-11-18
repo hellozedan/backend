@@ -8,7 +8,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/')
 /** GET /api/serviceProviders - Get list of serviceProviders */
-  .get(serviceProviderCtrl.list)
+  .get(config.authenticate, serviceProviderCtrl.getCurrentUserWhenItNeed, serviceProviderCtrl.list)
 
   /** POST /api/serviceProviders - Create new serviceProvider */
   .post(validate(paramValidation.createServiceProvider), serviceProviderCtrl.create);
