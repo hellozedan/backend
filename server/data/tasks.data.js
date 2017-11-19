@@ -12,12 +12,14 @@ const taskList = [
       {
         taskName: 'xxxxxxxxxx',
         selected: false,
-        order: 1
+        order: 1,
+        archive: false
       },
       {
         taskName: 'yyyyyyyy',
         selected: false,
-        order: 2
+        order: 2,
+        archive: false
       }
 
     ],
@@ -29,12 +31,14 @@ const taskList = [
       {
         taskName: 'vvvvvvvvv',
         selected: false,
-        order: 1
+        order: 1,
+        archive: false
       },
       {
         taskName: 'hhhhhhhh',
         selected: false,
-        order: 2
+        order: 2,
+        archive: false
       }
 
     ],
@@ -51,7 +55,8 @@ const taskList = [
       {
         taskName: 'hhhhhhhh',
         selected: false,
-        order: 2
+        order: 2,
+        archive: false
       }
 
     ],

@@ -25,7 +25,14 @@ function getOne(req, res) {
 
 function getTasks(req, res) {
   const user = req.user.toObject();
-  res.json({ tasks: user.tasks, tasksCategories: taskData.tasksCategories });
+  const tasks = user.tasks.map((i)=>{
+    return {
+      order: i.order,
+      categoryName: i.categoryName,
+      tasks: i.tasks.filter((x) => !x.archive)
+    }
+  });
+  res.json({ tasks, tasksCategories: taskData.tasksCategories });
 }
 
 
