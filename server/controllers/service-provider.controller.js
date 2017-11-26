@@ -47,6 +47,7 @@ function create(req, res, next) {
     serviceProviderName: req.body.serviceProviderName,
     serviceProviderDesc: req.body.serviceProviderDesc,
     serviceProviderImagesUrl: req.body.serviceProviderImagesUrl,
+    area: req.body.area,
     address: req.body.address,
     reviews: req.body.reviews,
     primary: req.body.primary,
